@@ -1,9 +1,9 @@
-import 'package:app_dos_flutter_camp/src/presentation/screens/welcome_screen.dart';
 import 'package:app_dos_flutter_camp/src/presentation/widgets/custom_widget.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeWidget extends StatelessWidget {
   const WelcomeWidget({
+    super.key,
     required this.size,
   });
 
