@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "669410455356",
+    "project_id": "auth-594ad",
+    "storage_bucket": "auth-594ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:669410455356:android:4aeb61532e0b7fc004b839",
+        "android_client_info": {
+          "package_name": "com.example.app_dos_flutter_camp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDRZivUDxDrPeq4OZr-nzJaxDPUrnTy3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,7 @@
+import 'package:app_dos_flutter_camp/src/presentation/screens/home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -7,6 +10,31 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController email = TextEditingController();
     TextEditingController password = TextEditingController();
+
+    final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+    // User? user1;
+
+    loginWithsGoogle() async {
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount!.authentication;
+      final AuthCredential authCredential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      try {
+        final UserCredential userCredential =
+            await firebaseAuth.signInWithCredential(authCredential);
+        print(userCredential.user);
+        return userCredential;
+      } catch (e) {
+        print(e);
+        return null;
+      }
+    }
 
     final _formKey = GlobalKey<FormState>();
 
@@ -144,12 +172,75 @@ class LoginScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  _googleButton(),
+                  // _googleButton(),
+                  _googleButton(
+                    loginWithsGoogle,
+                    context,
+                    firebaseAuth,
+                    googleSignIn,
+                  ),
+
                   const SizedBox(
                     height: 20,
                   ),
                   _facebookButton()
                 ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SizedBox _googleButton(Future<UserCredential?> loginWithsGoogle(),
+      BuildContext context, FirebaseAuth auth, GoogleSignIn googleSignIn) {
+    return SizedBox(
+      width: 350,
+      child: ElevatedButton(
+        onPressed: () async {
+          UserCredential? userCredentialFinal = await loginWithsGoogle();
+          if (userCredentialFinal != null) {
+            // ignore: use_build_context_synchronously
+            Navigator.pushReplacement(
+              //TODO: Quitar todas las pantallas
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(
+                  user: userCredentialFinal.user,
+                  auth: auth,
+                  googleSignIn: googleSignIn,
+                ),
+              ),
+            );
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        child: Row(
+          children: [
+            Image.network(
+              'https://rotulosmatesanz.com/wp-content/uploads/2017/09/2000px-Google_G_Logo.svg_.png',
+              width: 35,
+              height: 35,
+            ),
+            const Spacer(),
+            const Text(
+              "Cotinue with Google",
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+            const Spacer(),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.arrow_forward_outlined,
+                color: Colors.black,
               ),
             ),
           ],
@@ -171,7 +262,7 @@ class LoginScreen extends StatelessWidget {
             color: Colors.white,
             borderRadius: BorderRadius.circular(40),
             boxShadow: [
-              BoxShadow(
+              const BoxShadow(
                 color: Colors.black12,
                 blurRadius: 5,
               )
@@ -233,49 +324,6 @@ class LoginScreen extends StatelessWidget {
         //   ],
         // ),
         // ),
-      ),
-    );
-  }
-
-  Container _googleButton() {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 30,
-      ),
-      width: double.infinity,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
-        child: Row(
-          children: [
-            Image.network(
-              'https://rotulosmatesanz.com/wp-content/uploads/2017/09/2000px-Google_G_Logo.svg_.png',
-              width: 35,
-              height: 35,
-            ),
-            const Spacer(),
-            const Text(
-              "Cotinue with Google",
-              style: TextStyle(
-                color: Colors.black,
-              ),
-            ),
-            const Spacer(),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.arrow_forward_outlined,
-                color: Colors.black,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

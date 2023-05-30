@@ -1,9 +1,14 @@
 import 'package:app_dos_flutter_camp/src/presentation/screens/login_screen.dart';
 import 'package:app_dos_flutter_camp/src/presentation/screens/register_screen.dart';
 import 'package:app_dos_flutter_camp/src/presentation/screens/welcome_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const MyApp());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
