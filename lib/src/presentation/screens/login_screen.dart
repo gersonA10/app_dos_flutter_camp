@@ -145,7 +145,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   _googleButton(),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                   _facebookButton()
